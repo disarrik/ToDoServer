@@ -27,7 +27,6 @@ public class GroupEntity {
     private List<GroupEventEntity> events;
 
 
-
     public void addMember(UserEntity newUser) {
         members.add(newUser);
         newUser.getGroups().add(this);

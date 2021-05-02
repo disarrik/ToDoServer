@@ -1,6 +1,9 @@
 package com.example.restserver.entity;
 
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,14 +14,22 @@ public class GroupTaskEntity {
     private String name;
     private String description;
     private String dueDate;
-//    @ManyToMany
-//    //todo
-//    private List<UserEntity> hasDone;
+
+
+    @ManyToMany(cascade = CascadeType.DETACH)
+    @JoinTable(name = "task_userHasDone", joinColumns = {@JoinColumn(name = "task_id")}, inverseJoinColumns = {@JoinColumn (name = "user_id")})
+    private List<UserEntity> hasDone;
 
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "group_id")
     private GroupEntity group;
+
+
+    public void completeTask(UserEntity member) {
+        this.getHasDone().add(member);
+        member.getDoneTasks().add(this);
+    }
 
     public Long getId() {
         return id;
@@ -55,4 +66,8 @@ public class GroupTaskEntity {
     public String getDueDate() { return dueDate; }
 
     public void setDueDate(String dueDate) { this.dueDate = dueDate; }
+
+    public List<UserEntity> getHasDone() { return hasDone; }
+
+    public void setHasDone(List<UserEntity> hasDone) { this.hasDone = hasDone; }
 }

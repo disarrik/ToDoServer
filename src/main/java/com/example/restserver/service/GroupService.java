@@ -27,6 +27,7 @@ public class GroupService {
         return false;
     }
 
+
     public GroupEntity findByAdminAndName(UserEntity admin, String name) {
         return groupRepository.findByAdminAndName(admin, name);
     }

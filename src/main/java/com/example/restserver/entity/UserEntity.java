@@ -16,6 +16,9 @@ public class UserEntity {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH, mappedBy = "members")
     private List<GroupEntity> groups;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH, mappedBy = "hasDone")
+    private List<GroupTaskEntity> doneTasks;
+
     public Long getId() {
         return id;
     }
@@ -54,5 +57,13 @@ public class UserEntity {
 
     public void setGroups(List<GroupEntity> groups) {
         this.groups = groups;
+    }
+
+    public List<GroupTaskEntity> getDoneTasks() {
+        return doneTasks;
+    }
+
+    public void setDoneTasks(List<GroupTaskEntity> doneTasks) {
+        this.doneTasks = doneTasks;
     }
 }

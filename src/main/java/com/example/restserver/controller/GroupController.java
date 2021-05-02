@@ -9,6 +9,7 @@ import com.example.restserver.repository.GroupRepository;
 import com.example.restserver.service.GroupService;
 import com.example.restserver.service.GroupTaskService;
 import com.example.restserver.service.UserService;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -104,12 +105,12 @@ public class GroupController {
             GroupTaskEntity newTask = holder.getTask();
             admin = userService.findByEmailAndPassword(admin.getEmail(), admin.getPassword());
             group = groupService.findByAdminAndName(admin, group.getName());
-            if (admin != null && group != null) {
+            if (admin != null && group != null && groupTaskService.findByGroupAndName(group, newTask.getName()) == null) {
                 newTask.setGroup(group);
                 groupTaskService.add(newTask);
                 return ResponseEntity.ok("Задание создано");
             } else {
-                return ResponseEntity.badRequest().body("Задание не можнт быть создано!");
+                return ResponseEntity.badRequest().body("Задание не может быть создано!");
             }
         }
         catch (UserNotFoundException e) {
@@ -119,6 +120,29 @@ public class GroupController {
             return ResponseEntity.badRequest().body("Группа не найдена");
         }
     }
+
+    /*@PostMapping("/done")
+    public ResponseEntity done(@RequestBody TaskAndUserHolder holder) {
+        try {
+            GroupTaskEntity task = holder.getTask();
+            UserEntity user = holder.getUser();
+            user = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
+            UserEntity admin = task.getGroup().getAdmin();
+            admin = userService.findByEmail(admin.getEmail());
+            GroupEntity groupOfTask = task.getGroup();
+            groupOfTask = groupService.findByAdminAndName(admin, groupOfTask.getName());
+            task = groupTaskService.findByGroupAndName(groupOfTask, task.getName());
+            task.completeTask(user);
+            groupTaskService.add(task);
+            return ResponseEntity.ok("Выполнено");
+        }
+        catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("Пользователя не существует");
+        }
+        catch (GroupNotFoundException e) {
+            return ResponseEntity.badRequest().body("Группы не существует");
+        }
+    }*/
 }
 
 class AdminAndGroupHolder {
@@ -204,4 +228,25 @@ class AdminAndGroupAndTaskHolder {
     private GroupTaskEntity task;
 
 
+}
+
+class TaskAndUserHolder {
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public GroupTaskEntity getTask() {
+        return task;
+    }
+
+    public void setTask(GroupTaskEntity task) {
+        this.task = task;
+    }
+
+    private UserEntity user;
+    private GroupTaskEntity task;
 }

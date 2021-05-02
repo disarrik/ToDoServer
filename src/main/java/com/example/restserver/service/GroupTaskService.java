@@ -1,5 +1,6 @@
 package com.example.restserver.service;
 
+import com.example.restserver.entity.GroupEntity;
 import com.example.restserver.entity.GroupTaskEntity;
 import com.example.restserver.exception.GroupNotFoundException;
 import com.example.restserver.repository.GroupRepository;
@@ -22,5 +23,9 @@ public class GroupTaskService {
             groupTaskRepository.save(newTask);
             return true;
         }
+    }
+
+    public GroupTaskEntity findByGroupAndName(GroupEntity group, String name) {
+        return groupTaskRepository.findByGroupAndName(group, name);
     }
 }
