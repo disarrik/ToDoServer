@@ -1,6 +1,7 @@
 package com.example.restserver.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class GroupTaskEntity {
@@ -10,9 +11,12 @@ public class GroupTaskEntity {
     private String name;
     private String description;
     private String dueDate;
+//    @ManyToMany
+//    //todo
+//    private List<UserEntity> hasDone;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "group_id")
     private GroupEntity group;
 

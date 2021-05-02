@@ -1,10 +1,13 @@
 package com.example.restserver.controller;
 
 import com.example.restserver.entity.GroupEntity;
+import com.example.restserver.entity.GroupTaskEntity;
 import com.example.restserver.entity.UserEntity;
+import com.example.restserver.exception.GroupNotFoundException;
 import com.example.restserver.exception.UserNotFoundException;
 import com.example.restserver.repository.GroupRepository;
 import com.example.restserver.service.GroupService;
+import com.example.restserver.service.GroupTaskService;
 import com.example.restserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,9 @@ public class GroupController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupTaskService groupTaskService;
 
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody AdminAndGroupHolder holder) {
@@ -64,6 +70,53 @@ public class GroupController {
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body("Пользователь не может быть добавлен");
+        }
+    }
+
+    @DeleteMapping("/kickMember")
+    public ResponseEntity deleteMember(@RequestBody AdminAndGroupAndUserHolder holder) {
+        try{
+            UserEntity admin = holder.getAdmin();
+            GroupEntity group = holder.getGroup();
+            UserEntity newMember = holder.getNewMember();
+            admin = userService.findByEmailAndPassword(admin.getEmail(), admin.getPassword());
+            group = groupService.findByAdminAndName(admin, group.getName());
+            newMember = userService.findByEmail(newMember.getEmail());
+            if (admin != null && group != null && newMember != null) {
+                group.deleteMember(newMember);
+                groupService.deleteById(group.getId());
+                groupService.create(group);
+                return ResponseEntity.ok("Пользователь удален");
+            } else {
+                return ResponseEntity.badRequest().body("Пользователь не может быть удален!");
+            }
+        }
+        catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("Пользователь не может быть удален");
+        }
+    }
+
+    @PostMapping("/addTask")
+    public ResponseEntity addTask(@RequestBody AdminAndGroupAndTaskHolder holder) {
+        try {
+            UserEntity admin = holder.getAdmin();
+            GroupEntity group = holder.getGroup();
+            GroupTaskEntity newTask = holder.getTask();
+            admin = userService.findByEmailAndPassword(admin.getEmail(), admin.getPassword());
+            group = groupService.findByAdminAndName(admin, group.getName());
+            if (admin != null && group != null) {
+                newTask.setGroup(group);
+                groupTaskService.add(newTask);
+                return ResponseEntity.ok("Задание создано");
+            } else {
+                return ResponseEntity.badRequest().body("Задание не можнт быть создано!");
+            }
+        }
+        catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("Администратор не найден");
+        }
+        catch (GroupNotFoundException e) {
+            return ResponseEntity.badRequest().body("Группа не найдена");
         }
     }
 }
@@ -119,4 +172,36 @@ class AdminAndGroupAndUserHolder {
 
     private UserEntity newMember;
     private GroupEntity group;
+}
+
+class AdminAndGroupAndTaskHolder {
+    public UserEntity getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(UserEntity admin) {
+        this.admin = admin;
+    }
+
+    public GroupEntity getGroup() {
+        return group;
+    }
+
+    public void setGroup(GroupEntity group) {
+        this.group = group;
+    }
+
+    public GroupTaskEntity getTask() {
+        return task;
+    }
+
+    public void setTask(GroupTaskEntity task) {
+        this.task = task;
+    }
+
+    private UserEntity admin;
+    private GroupEntity group;
+    private GroupTaskEntity task;
+
+
 }

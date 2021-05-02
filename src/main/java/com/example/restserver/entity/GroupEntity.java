@@ -16,11 +16,11 @@ public class GroupEntity {
     @JoinColumn(name = "admin_id")
     private UserEntity admin;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinTable(name = "group_user", joinColumns = {@JoinColumn(name = "group_id")}, inverseJoinColumns = {@JoinColumn (name = "user_id")})
     private List<UserEntity> members;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "group")
     private List<GroupTaskEntity> tasks;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
@@ -34,8 +34,20 @@ public class GroupEntity {
     }
 
     public void deleteMember(UserEntity member) {
-        member.getGroups().remove(this);
-        members.remove(member);
+        UserEntity memberToDelete = null;
+        for (int i = 0; i < members.size(); i++) {
+            if (member.getEmail().equals(members.get(i).getEmail())) {
+                memberToDelete = members.get(i);
+            }
+        }
+        this.members.remove(memberToDelete);
+        GroupEntity groupToDelete = null;
+        for (int i = 0; i < memberToDelete.getGroups().size(); i++) {
+            if (memberToDelete.getGroups().get(i).getAdmin().getEmail().equals(this.getAdmin().getEmail())) {
+                groupToDelete = memberToDelete.getGroups().get(i);
+            }
+        }
+        member.getGroups().remove(groupToDelete);
     }
 
     public Long getId() {

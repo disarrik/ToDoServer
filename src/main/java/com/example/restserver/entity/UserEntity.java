@@ -13,7 +13,7 @@ public class UserEntity {
     private String password;
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "members")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH, mappedBy = "members")
     private List<GroupEntity> groups;
 
     public Long getId() {
