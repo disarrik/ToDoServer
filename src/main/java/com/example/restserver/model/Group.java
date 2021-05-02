@@ -23,6 +23,6 @@ public class Group {
     }
 
     public static Group entityToModel(GroupEntity groupEntity) {
-        return new Group(groupEntity.getName(), groupEntity.getAdmin_id(), groupEntity.getMembers());
+        return new Group(groupEntity.getName(), groupEntity.getAdmin().getId(), groupEntity.getMembers());
     }
 }

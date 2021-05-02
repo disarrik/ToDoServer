@@ -41,4 +41,21 @@ public class UserService {
         else
             throw new UserNotFoundException("User Not Found");
     }
+
+    public UserEntity findByEmailAndPassword(String email, String password) throws UserNotFoundException{
+        UserEntity user  = userRepository.findByEmailAndPassword(email, password);
+        if(user == null) throw new UserNotFoundException("Пользователь с таким логином и паролем не найлен");
+        return user;
+    }
+
+    public boolean userExist(UserEntity user) {
+        if(userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword()) != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public UserEntity findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

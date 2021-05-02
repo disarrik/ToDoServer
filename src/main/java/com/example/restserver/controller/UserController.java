@@ -19,8 +19,13 @@ public class UserController {
     @PostMapping("/registration")
     public ResponseEntity registration(@RequestBody UserEntity user) {
         try{
-            userService.registration(user);
-            return ResponseEntity.ok().body("Пользоваьтель создан");
+            if(userService.findByEmail(user.getEmail()) == null) {
+                userService.registration(user);
+                return ResponseEntity.ok().body("Пользоваьтель создан");
+            }
+            else {
+                return ResponseEntity.badRequest().body("Пользователь с данной почтой уже существует");
+            }
         }
         catch (Exception e) {
             return ResponseEntity.badRequest().body("Невозможно создать такого пользователя");
