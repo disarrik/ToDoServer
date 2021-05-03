@@ -55,7 +55,18 @@ public class UserService {
         return false;
     }
 
-    public UserEntity findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public boolean existByEmail(String email) {
+        if(userRepository.findByEmail(email) != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public UserEntity findByEmail(String email) throws UserNotFoundException{
+        UserEntity user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("Пользователь с такой почтой не найден");
+        }
+        return user;
     }
 }

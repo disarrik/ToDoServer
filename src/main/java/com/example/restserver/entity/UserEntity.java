@@ -14,10 +14,10 @@ public class UserEntity {
     private String password;
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH, mappedBy = "members")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "members")
     private Set<GroupEntity> groups;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH, mappedBy = "hasDone")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, mappedBy = "hasDone")
     private Set<GroupTaskEntity> doneTasks;
 
     public Long getId() {

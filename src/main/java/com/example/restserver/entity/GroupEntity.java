@@ -40,6 +40,7 @@ public class GroupEntity {
                 memberToDelete = user;
             }
         }
+        if (memberToDelete == null) return;
         this.members.remove(memberToDelete);
         GroupEntity groupToDelete = null;
         for (GroupEntity group : memberToDelete.getGroups()) {

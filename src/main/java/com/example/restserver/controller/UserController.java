@@ -19,7 +19,7 @@ public class UserController {
     @PostMapping("/registration")
     public ResponseEntity registration(@RequestBody UserEntity user) {
         try{
-            if(userService.findByEmail(user.getEmail()) == null) {
+            if(!userService.existByEmail(user.getEmail())) {
                 userService.registration(user);
                 return ResponseEntity.ok().body("Пользоваьтель создан");
             }

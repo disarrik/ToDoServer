@@ -6,15 +6,17 @@ public class GroupTask {
     private String name;
     private String description;
     private String dueDate;
+    private boolean isDone;
 
-    private GroupTask(String name, String description, String dueDate) {
+    private GroupTask(String name, String description, String dueDate, boolean isDone) {
         this.name = name;
         this.description = description;
         this.dueDate = dueDate;
+        this.isDone = isDone;
     }
 
-    public static GroupTask entityToModel(GroupTaskEntity groupTaskEntity) {
-        return new GroupTask(groupTaskEntity.getName(), groupTaskEntity.getDescription(), groupTaskEntity.getDueDate());
+    public static GroupTask entityToModel(GroupTaskEntity groupTaskEntity, boolean isDone) {
+        return new GroupTask(groupTaskEntity.getName(), groupTaskEntity.getDescription(), groupTaskEntity.getDueDate(), isDone);
     }
 
     public String getName() {
@@ -39,5 +41,13 @@ public class GroupTask {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public void setDone(boolean done) {
+        isDone = done;
     }
 }

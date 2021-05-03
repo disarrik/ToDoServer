@@ -12,7 +12,7 @@ public class GroupService {
     @Autowired
     GroupRepository groupRepository;
 
-    public GroupEntity create(GroupEntity newGroup) {
+    public GroupEntity save(GroupEntity newGroup) {
         groupRepository.save(newGroup);
         return newGroup;
     }

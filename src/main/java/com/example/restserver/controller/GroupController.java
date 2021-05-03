@@ -41,7 +41,7 @@ public class GroupController {
             if (userService.userExist(admin)) {
                 newGroup.setAdmin(admin);
                 if (!groupService.groupExist(newGroup)) {
-                    groupService.create(newGroup);
+                    groupService.save(newGroup);
                     return ResponseEntity.ok("Группа создана");
                 }
                 else {
@@ -67,13 +67,13 @@ public class GroupController {
             newMember = userService.findByEmail(newMember.getEmail());
             if (admin != null && group != null && newMember != null) {
                 group.addMember(newMember);
-                groupService.create(group);
+                groupService.save(group);
                 return ResponseEntity.ok("Пользователь добавлен");
             } else {
                 return ResponseEntity.badRequest().body("Пользователь не может быть добавлен!");
             }
         }
-        catch (Exception e) {
+        catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body("Пользователь не может быть добавлен");
         }
     }
@@ -90,7 +90,7 @@ public class GroupController {
             if (admin != null && group != null && newMember != null) {
                 group.deleteMember(newMember);
                 groupService.deleteById(group.getId());
-                groupService.create(group);
+                groupService.save(group);
                 return ResponseEntity.ok("Пользователь удален");
             } else {
                 return ResponseEntity.badRequest().body("Пользователь не может быть удален!");
@@ -152,7 +152,7 @@ public class GroupController {
     public ResponseEntity view(@RequestBody UserEntity user) {
         try {
             user = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
-            return ResponseEntity.ok(Group.entityToModel(user.getGroups()));
+            return ResponseEntity.ok(Group.entityToModel(user.getGroups(), user));
         }
         catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body("Пользователь не найден");
@@ -177,6 +177,24 @@ public class GroupController {
         }
         catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body("Пользователь не найден");
+        }
+    }
+
+    @PostMapping("/leave")
+    public ResponseEntity leave(@RequestBody UserAndGroupHolder holder) {
+        try{
+            UserEntity user = holder.getUser();
+            GroupEntity group = holder.getGroup();
+            UserEntity admin = group.getAdmin();
+            admin = userService.findByEmail(admin.getEmail());
+            user = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
+            group = groupService.findByAdminAndName(admin, group.getName());
+            if (admin == user) return ResponseEntity.badRequest().body("Нельзя удалить администратора");
+            group.deleteMember(user);
+            groupService.save(group);
+            return ResponseEntity.ok("Пользователь удален");
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("Данного пользователя не существует");
         }
     }
 }
@@ -307,6 +325,27 @@ class AdminAndGroupAndEventHolder {
 
     public void setEvent(GroupEventEntity event) {
         this.event = event;
+    }
+
+    public GroupEntity getGroup() {
+        return group;
+    }
+
+    public void setGroup(GroupEntity group) {
+        this.group = group;
+    }
+}
+
+class UserAndGroupHolder {
+    private UserEntity user;
+    private GroupEntity group;
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public GroupEntity getGroup() {
