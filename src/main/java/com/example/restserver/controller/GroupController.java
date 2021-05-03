@@ -5,11 +5,10 @@ import com.example.restserver.entity.GroupTaskEntity;
 import com.example.restserver.entity.UserEntity;
 import com.example.restserver.exception.GroupNotFoundException;
 import com.example.restserver.exception.UserNotFoundException;
-import com.example.restserver.repository.GroupRepository;
+import com.example.restserver.model.Group;
 import com.example.restserver.service.GroupService;
 import com.example.restserver.service.GroupTaskService;
 import com.example.restserver.service.UserService;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -121,7 +120,7 @@ public class GroupController {
         }
     }
 
-    /*@PostMapping("/done")
+    @PostMapping("/done")
     public ResponseEntity done(@RequestBody TaskAndUserHolder holder) {
         try {
             GroupTaskEntity task = holder.getTask();
@@ -142,7 +141,18 @@ public class GroupController {
         catch (GroupNotFoundException e) {
             return ResponseEntity.badRequest().body("Группы не существует");
         }
-    }*/
+    }
+
+    @GetMapping("/view")
+    public ResponseEntity view(@RequestBody UserEntity user) {
+        try {
+            user = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
+            return ResponseEntity.ok(Group.entityToModel(user.getGroups()));
+        }
+        catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("Пользователь не найден");
+        }
+    }
 }
 
 class AdminAndGroupHolder {
@@ -176,6 +186,7 @@ class AdminAndGroupAndUserHolder {
 
     public void setAdmin(UserEntity admin) {
         this.admin = admin;
+
     }
 
     public UserEntity getNewMember() {

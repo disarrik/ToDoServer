@@ -15,4 +15,20 @@ public class User {
     public static User entityToModel(UserEntity userEntity) {
         return new User(userEntity.getFullname(), userEntity.getEmail());
     }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

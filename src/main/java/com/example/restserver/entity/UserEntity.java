@@ -2,6 +2,7 @@ package com.example.restserver.entity;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class UserEntity {
@@ -14,10 +15,10 @@ public class UserEntity {
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH, mappedBy = "members")
-    private List<GroupEntity> groups;
+    private Set<GroupEntity> groups;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH, mappedBy = "hasDone")
-    private List<GroupTaskEntity> doneTasks;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH, mappedBy = "hasDone")
+    private Set<GroupTaskEntity> doneTasks;
 
     public Long getId() {
         return id;
@@ -51,19 +52,19 @@ public class UserEntity {
         this.email = email;
     }
 
-    public List<GroupEntity> getGroups() {
+    public Set<GroupEntity> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<GroupEntity> groups) {
+    public void setGroups(Set<GroupEntity> groups) {
         this.groups = groups;
     }
 
-    public List<GroupTaskEntity> getDoneTasks() {
+    public Set<GroupTaskEntity> getDoneTasks() {
         return doneTasks;
     }
 
-    public void setDoneTasks(List<GroupTaskEntity> doneTasks) {
+    public void setDoneTasks(Set<GroupTaskEntity> doneTasks) {
         this.doneTasks = doneTasks;
     }
 }

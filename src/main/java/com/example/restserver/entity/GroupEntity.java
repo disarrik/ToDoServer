@@ -4,6 +4,7 @@ import com.example.restserver.model.User;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class GroupEntity {
@@ -18,7 +19,7 @@ public class GroupEntity {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinTable(name = "group_user", joinColumns = {@JoinColumn(name = "group_id")}, inverseJoinColumns = {@JoinColumn (name = "user_id")})
-    private List<UserEntity> members;
+    private Set<UserEntity> members;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "group")
     private List<GroupTaskEntity> tasks;
@@ -34,16 +35,16 @@ public class GroupEntity {
 
     public void deleteMember(UserEntity member) {
         UserEntity memberToDelete = null;
-        for (int i = 0; i < members.size(); i++) {
-            if (member.getEmail().equals(members.get(i).getEmail())) {
-                memberToDelete = members.get(i);
+        for (UserEntity user: members) {
+            if (member.getEmail().equals(user.getEmail())) {
+                memberToDelete = user;
             }
         }
         this.members.remove(memberToDelete);
         GroupEntity groupToDelete = null;
-        for (int i = 0; i < memberToDelete.getGroups().size(); i++) {
-            if (memberToDelete.getGroups().get(i).getAdmin().getEmail().equals(this.getAdmin().getEmail())) {
-                groupToDelete = memberToDelete.getGroups().get(i);
+        for (GroupEntity group : memberToDelete.getGroups()) {
+            if (group.getAdmin().getEmail().equals(this.getAdmin().getEmail())) {
+                groupToDelete = group;
             }
         }
         member.getGroups().remove(groupToDelete);
@@ -65,11 +66,11 @@ public class GroupEntity {
         this.name = name;
     }
 
-    public List<UserEntity> getMembers() {
+    public Set<UserEntity> getMembers() {
         return members;
     }
 
-    public void setMembers(List<UserEntity> members) {
+    public void setMembers(Set<UserEntity> members) {
         this.members = members;
     }
 
