@@ -1,5 +1,6 @@
 package com.example.restserver.model;
 import com.example.restserver.entity.GroupEntity;
+import com.example.restserver.entity.GroupEventEntity;
 import com.example.restserver.entity.GroupTaskEntity;
 import com.example.restserver.entity.UserEntity;
 
@@ -15,8 +16,9 @@ public class Group implements Serializable {
     private User admin;
     private List<User> members = new ArrayList<>();
     private List<GroupTask> tasks = new ArrayList<>();
+    private List<GroupEvent> events = new ArrayList<>();
 
-    private Group(String name, UserEntity admin, Set<UserEntity> members, List<GroupTaskEntity> tasks) {
+    private Group(String name, UserEntity admin, Set<UserEntity> members, List<GroupTaskEntity> tasks, List<GroupEventEntity> events) {
         this.name = name;
         this.admin = User.entityToModel(admin);
         for (UserEntity user : members) {
@@ -25,10 +27,13 @@ public class Group implements Serializable {
         for (GroupTaskEntity task : tasks) {
             this.tasks.add(GroupTask.entityToModel(task));
         }
+        for (GroupEventEntity event : events) {
+            this.events.add(GroupEvent.entityToModel(event));
+        }
     }
 
     public static Group entityToModel(GroupEntity groupEntity) {
-        return new Group(groupEntity.getName(), groupEntity.getAdmin(), groupEntity.getMembers(), groupEntity.getTasks());
+        return new Group(groupEntity.getName(), groupEntity.getAdmin(), groupEntity.getMembers(), groupEntity.getTasks(), groupEntity.getEvents());
     }
 
     public static List<Group> entityToModel(Set<GroupEntity> groupEntities) {
@@ -70,4 +75,8 @@ public class Group implements Serializable {
     public void setTasks(List<GroupTask> tasks) {
         this.tasks = tasks;
     }
+
+    public List<GroupEvent> getEvents() { return events; }
+
+    public void setEvents(List<GroupEvent> events) { this.events = events; }
 }

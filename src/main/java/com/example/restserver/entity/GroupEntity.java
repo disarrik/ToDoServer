@@ -24,7 +24,7 @@ public class GroupEntity {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "group")
     private List<GroupTaskEntity> tasks;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "group")
     private List<GroupEventEntity> events;
 
 

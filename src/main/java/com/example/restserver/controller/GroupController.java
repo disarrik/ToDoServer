@@ -1,11 +1,13 @@
 package com.example.restserver.controller;
 
 import com.example.restserver.entity.GroupEntity;
+import com.example.restserver.entity.GroupEventEntity;
 import com.example.restserver.entity.GroupTaskEntity;
 import com.example.restserver.entity.UserEntity;
 import com.example.restserver.exception.GroupNotFoundException;
 import com.example.restserver.exception.UserNotFoundException;
 import com.example.restserver.model.Group;
+import com.example.restserver.service.GroupEventService;
 import com.example.restserver.service.GroupService;
 import com.example.restserver.service.GroupTaskService;
 import com.example.restserver.service.UserService;
@@ -25,6 +27,9 @@ public class GroupController {
 
     @Autowired
     private GroupTaskService groupTaskService;
+
+    @Autowired
+    private GroupEventService groupEventService;
 
     @PostMapping("/create")
     public ResponseEntity create(@RequestBody AdminAndGroupHolder holder) {
@@ -153,6 +158,27 @@ public class GroupController {
             return ResponseEntity.badRequest().body("Пользователь не найден");
         }
     }
+
+    @PostMapping("/addEvent")
+    public ResponseEntity addEvent(@RequestBody AdminAndGroupAndEventHolder holder) {
+        try{
+            UserEntity admin = holder.getAdmin();
+            GroupEntity group = holder.getGroup();
+            admin = userService.findByEmailAndPassword(admin.getEmail(), admin.getPassword());
+            group = groupService.findByAdminAndName(admin, group.getName());
+            //todo group can be null
+            GroupEventEntity event = holder.getEvent();
+            if (group != null && admin != null && !groupEventService.existByGroupAndName(group, event.getName())) {
+                event.setGroup(group);
+                groupEventService.add(event);
+                return ResponseEntity.ok("Событие добавлено");
+            }
+            return ResponseEntity.badRequest().body("Событие с таким именем уже существует");
+        }
+        catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().body("Пользователь не найден");
+        }
+    }
 }
 
 class AdminAndGroupHolder {
@@ -260,4 +286,34 @@ class TaskAndUserHolder {
 
     private UserEntity user;
     private GroupTaskEntity task;
+}
+
+class AdminAndGroupAndEventHolder {
+    private UserEntity admin;
+    private GroupEntity group;
+    private GroupEventEntity event;
+
+    public UserEntity getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(UserEntity admin) {
+        this.admin = admin;
+    }
+
+    public GroupEventEntity getEvent() {
+        return event;
+    }
+
+    public void setEvent(GroupEventEntity event) {
+        this.event = event;
+    }
+
+    public GroupEntity getGroup() {
+        return group;
+    }
+
+    public void setGroup(GroupEntity group) {
+        this.group = group;
+    }
 }
