@@ -14,9 +14,9 @@ public class Group implements Serializable {
 
     private String name;
     private User admin;
-    private List<User> members = new ArrayList<>();
-    private List<GroupTask> tasks = new ArrayList<>();
-    private List<GroupEvent> events = new ArrayList<>();
+    private List<User> members = new ArrayList<User>();
+    private List<GroupTask> tasks = new ArrayList<GroupTask>();
+    private List<GroupEvent> events = new ArrayList<GroupEvent>();
 
     private Group(String name, UserEntity admin, Set<UserEntity> members, List<GroupTaskEntity> tasks, List<GroupEventEntity> events, UserEntity targetUser) {
         this.name = name;
@@ -40,7 +40,7 @@ public class Group implements Serializable {
     }
 
     public static List<Group> entityToModel(Set<GroupEntity> groupEntities, UserEntity targetUser) {
-        List<Group> groups = new ArrayList<>();
+        List<Group> groups = new ArrayList<Group>();
         for (GroupEntity group: groupEntities) {
             groups.add(entityToModel(group, targetUser));
         }
