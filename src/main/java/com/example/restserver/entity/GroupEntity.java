@@ -3,8 +3,10 @@ package com.example.restserver.entity;
 import com.example.restserver.model.User;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 public class GroupEntity {
@@ -19,7 +21,7 @@ public class GroupEntity {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinTable(name = "group_user", joinColumns = {@JoinColumn(name = "group_id")}, inverseJoinColumns = {@JoinColumn (name = "user_id")})
-    private Set<UserEntity> members;
+    private Set<UserEntity> members = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "group")
     private List<GroupTaskEntity> tasks;

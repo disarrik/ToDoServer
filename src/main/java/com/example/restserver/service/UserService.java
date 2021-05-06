@@ -16,13 +16,8 @@ public class UserService {
     private UserRepository userRepository;
 
     public UserEntity registration(UserEntity newUser) throws UserAlreadyExistException{
-        if(userRepository.findByFullname(newUser.getFullname()) != null) {
-            throw new UserAlreadyExistException("This user already exist");
-        }
-        else {
-            userRepository.save(newUser);
-            return newUser;
-        }
+        userRepository.save(newUser);
+        return newUser;
     }
 
     public UserEntity findUserById(Long id) throws UserNotFoundException {
