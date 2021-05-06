@@ -39,6 +39,7 @@ public class GroupController {
             admin = userService.findByEmailAndPassword(admin.getEmail(), admin.getPassword());//
             GroupEntity newGroup = holder.getNewGroup();
             if (userService.userExist(admin)) {
+                newGroup.getMembers().add(admin);//
                 newGroup.setAdmin(admin);
                 if (!groupService.groupExist(newGroup)) {
                     groupService.save(newGroup);
