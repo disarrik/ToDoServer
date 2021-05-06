@@ -148,7 +148,7 @@ public class GroupController {
         }
     }
 
-    @GetMapping("/view")
+    @PostMapping("/view")
     public ResponseEntity view(@RequestBody UserEntity user) {
         try {
             user = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
