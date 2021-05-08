@@ -4,6 +4,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ public class GroupTaskEntity {
     private Long id;
     private String name;
     private String description;
-    private String dueDate;
+    private Date dueDate;
 
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
@@ -64,9 +65,9 @@ public class GroupTaskEntity {
         this.group = group;
     }
 
-    public String getDueDate() { return dueDate; }
+    public Date getDueDate() { return dueDate; }
 
-    public void setDueDate(String dueDate) { this.dueDate = dueDate; }
+    public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
 
     public Set<UserEntity> getHasDone() { return hasDone; }
 

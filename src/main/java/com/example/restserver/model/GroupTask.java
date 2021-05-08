@@ -2,13 +2,15 @@ package com.example.restserver.model;
 
 import com.example.restserver.entity.GroupTaskEntity;
 
+import java.util.Date;
+
 public class GroupTask {
     private String name;
     private String description;
-    private String dueDate;
+    private Date dueDate;
     private boolean isDone;
 
-    private GroupTask(String name, String description, String dueDate, boolean isDone) {
+    private GroupTask(String name, String description, Date dueDate, boolean isDone) {
         this.name = name;
         this.description = description;
         this.dueDate = dueDate;
@@ -35,11 +37,11 @@ public class GroupTask {
         this.description = description;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
