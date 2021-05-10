@@ -7,4 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface GroupTaskRepository extends CrudRepository<GroupTaskEntity, Long> {
     GroupTaskEntity findByGroupAndName(GroupEntity group, String name);
+    void deleteById(Long id);
 }

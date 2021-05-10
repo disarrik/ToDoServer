@@ -203,8 +203,10 @@ public class GroupController {
     public ResponseEntity delete(@RequestBody AdminAndGroupHolder adminAndGroupHolder) {
         try {
             UserEntity admin = userService.findByEmailAndPassword(adminAndGroupHolder.getAdmin().getEmail(), adminAndGroupHolder.getAdmin().getPassword());
+            System.out.println(admin.getId());
             GroupEntity group = groupService.findByAdminAndName(admin, adminAndGroupHolder.getGroup().getName());
-            groupService.deleteByNameAndAdmin(group.getName(), admin);
+            System.out.println(group.getId());
+            groupService.deleteById(group.getId());
         } catch (UserNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Данного пользователя не существует");

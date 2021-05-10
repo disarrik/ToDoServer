@@ -28,4 +28,8 @@ public class GroupTaskService {
     public GroupTaskEntity findByGroupAndName(GroupEntity group, String name) {
         return groupTaskRepository.findByGroupAndName(group, name);
     }
+
+    public void deleteById(Long id) {
+        groupTaskRepository.deleteById(id);
+    }
 }

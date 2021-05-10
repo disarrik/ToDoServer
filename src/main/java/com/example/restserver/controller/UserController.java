@@ -20,7 +20,7 @@ public class UserController {
     public ResponseEntity registration(@RequestBody UserEntity user) {
         try{
             if(!userService.existByEmail(user.getEmail())) {
-                userService.registration(user);
+                userService.save(user);
                 return ResponseEntity.ok().body("Пользоваьтель создан");
             }
             else {

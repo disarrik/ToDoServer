@@ -3,14 +3,21 @@ package com.example.restserver.service;
 import com.example.restserver.entity.GroupEntity;
 import com.example.restserver.entity.GroupTaskEntity;
 import com.example.restserver.entity.UserEntity;
+import com.example.restserver.exception.UserAlreadyExistException;
 import com.example.restserver.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.Member;
 
 @Service
 public class GroupService {
     @Autowired
     GroupRepository groupRepository;
+    @Autowired
+    GroupTaskService groupTaskService;
+    @Autowired
+    UserService userService;
 
     public GroupEntity save(GroupEntity newGroup) {
         groupRepository.save(newGroup);
@@ -18,7 +25,16 @@ public class GroupService {
     }
 
     public boolean deleteById(Long id) {
-        groupRepository.deleteById(id);
+        System.out.println("------------------------------------------------------");
+        GroupEntity group = groupRepository.findById(id).orElse(new GroupEntity());
+        for (UserEntity user : group.getMembers()) {
+            user.getGroups().remove(group);
+            userService.save(user);
+        }
+        for (GroupTaskEntity task : group.getTasks()) {
+            groupTaskService.deleteById(task.getId());
+        }
+        groupRepository.deleteQuery(id);
         return true;
     }
 
@@ -32,7 +48,5 @@ public class GroupService {
         return groupRepository.findByAdminAndName(admin, name);
     }
 
-    public void deleteByNameAndAdmin(String name, UserEntity admin) {
-        groupRepository.deleteByNameAndAdmin(name, admin);
-    }
+
 }

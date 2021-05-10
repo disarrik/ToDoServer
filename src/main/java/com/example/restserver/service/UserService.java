@@ -15,7 +15,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public UserEntity registration(UserEntity newUser) throws UserAlreadyExistException{
+    public UserEntity save(UserEntity newUser) {
         userRepository.save(newUser);
         return newUser;
     }
