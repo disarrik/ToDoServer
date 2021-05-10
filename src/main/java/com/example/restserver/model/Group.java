@@ -26,9 +26,9 @@ public class Group implements Serializable {
         }
         for (GroupTaskEntity task : tasks) {
             if(task.getHasDone().contains(targetUser))
-                this.tasks.add(GroupTask.entityToModel(task, true));
-            else
                 this.tasks.add(GroupTask.entityToModel(task, false));
+            else
+                this.tasks.add(GroupTask.entityToModel(task, true));
         }
         for (GroupEventEntity event : events) {
             this.events.add(GroupEvent.entityToModel(event));

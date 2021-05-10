@@ -1,5 +1,6 @@
 package com.example.restserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class GroupTaskEntity {
     private Long id;
     private String name;
     private String description;
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
     private Date dueDate;
 
 
