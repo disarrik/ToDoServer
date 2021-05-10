@@ -31,4 +31,8 @@ public class GroupService {
     public GroupEntity findByAdminAndName(UserEntity admin, String name) {
         return groupRepository.findByAdminAndName(admin, name);
     }
+
+    public void deleteByNameAndAdmin(String name, UserEntity admin) {
+        groupRepository.deleteByNameAndAdmin(name, admin);
+    }
 }
