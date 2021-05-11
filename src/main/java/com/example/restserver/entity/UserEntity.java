@@ -1,5 +1,8 @@
 package com.example.restserver.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +20,7 @@ public class UserEntity {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "members")
     private Set<GroupEntity> groups;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, mappedBy = "hasDone")
     private Set<GroupTaskEntity> doneTasks;
 

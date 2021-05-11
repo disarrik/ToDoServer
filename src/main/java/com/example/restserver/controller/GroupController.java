@@ -37,7 +37,7 @@ public class GroupController {
             UserEntity admin = holder.getAdmin();
             System.out.println(1);
             admin = userService.findByEmailAndPassword(admin.getEmail(), admin.getPassword());//
-            GroupEntity newGroup = holder.getNewGroup();
+            GroupEntity newGroup = holder.getGroup();
             if (userService.userExist(admin)) {
                 newGroup.getMembers().add(admin);//
                 newGroup.setAdmin(admin);
@@ -198,6 +198,21 @@ public class GroupController {
             return ResponseEntity.badRequest().body("Данного пользователя не существует");
         }
     }
+
+    @PostMapping("/delete")
+    public ResponseEntity delete(@RequestBody AdminAndGroupHolder adminAndGroupHolder) {
+        try {
+            UserEntity admin = userService.findByEmailAndPassword(adminAndGroupHolder.getAdmin().getEmail(), adminAndGroupHolder.getAdmin().getPassword());
+            System.out.println(admin.getId());
+            GroupEntity group = groupService.findByAdminAndName(admin, adminAndGroupHolder.getGroup().getName());
+            System.out.println(group.getId());
+            groupService.deleteById(group.getId());
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Данного пользователя не существует");
+        }
+        return ResponseEntity.ok("Группа удалена");
+    }
 }
 
 class AdminAndGroupHolder {
@@ -211,15 +226,15 @@ class AdminAndGroupHolder {
 
     private UserEntity admin;
 
-    public GroupEntity getNewGroup() {
-        return newGroup;
+    public GroupEntity getGroup() {
+        return group;
     }
 
-    public void setNewGroup(GroupEntity newGroup) {
-        this.newGroup = newGroup;
+    public void setGroup(GroupEntity group) {
+        this.group = group;
     }
 
-    private GroupEntity newGroup;
+    private GroupEntity group;
 }
 
 class AdminAndGroupAndUserHolder {

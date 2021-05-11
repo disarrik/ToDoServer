@@ -1,6 +1,8 @@
 package com.example.restserver.entity;
 
 import com.example.restserver.model.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -23,9 +25,11 @@ public class GroupEntity {
     @JoinTable(name = "group_user", joinColumns = {@JoinColumn(name = "group_id")}, inverseJoinColumns = {@JoinColumn (name = "user_id")})
     private Set<UserEntity> members = new HashSet<>();
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "group")
     private List<GroupTaskEntity> tasks;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "group")
     private List<GroupEventEntity> events;
 
