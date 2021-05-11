@@ -79,7 +79,7 @@ public class GroupController {
         }
     }
 
-    @DeleteMapping("/kickMember")
+    @PostMapping("/kickMember")
     public ResponseEntity deleteMember(@RequestBody AdminAndGroupAndUserHolder holder) {
         try{
             UserEntity admin = holder.getAdmin();
@@ -239,6 +239,8 @@ class AdminAndGroupHolder {
 
 class AdminAndGroupAndUserHolder {
     private UserEntity admin;
+    private UserEntity newMember;
+    private GroupEntity group;
 
     public UserEntity getAdmin() {
         return admin;
@@ -265,8 +267,7 @@ class AdminAndGroupAndUserHolder {
         this.group = group;
     }
 
-    private UserEntity newMember;
-    private GroupEntity group;
+
 }
 
 class AdminAndGroupAndTaskHolder {
