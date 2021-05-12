@@ -1,6 +1,8 @@
 package com.example.restserver.entity;
 
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class GroupTaskEntity {
     private Date dueDate;
 
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "task_userHasDone", joinColumns = {@JoinColumn(name = "task_id")}, inverseJoinColumns = {@JoinColumn (name = "user_id")})
     private Set<UserEntity> hasDone;
