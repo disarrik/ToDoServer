@@ -21,7 +21,7 @@ public class UserEntity {
     private Set<GroupEntity> groups;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, mappedBy = "hasDone")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE, mappedBy = "hasDone")
     private Set<GroupTaskEntity> doneTasks;
 
     public Long getId() {
