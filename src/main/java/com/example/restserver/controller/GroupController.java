@@ -112,7 +112,7 @@ public class GroupController {
             group = groupService.findByAdminAndName(admin, group.getName());
             if (admin != null && group != null && groupTaskService.findByGroupAndName(group, newTask.getName()) == null) {
                 newTask.setGroup(group);
-                groupTaskService.add(newTask);
+                groupTaskService.save(newTask);
                 return ResponseEntity.ok("Задание создано");
             } else {
                 return ResponseEntity.badRequest().body("Задание не может быть создано!");
@@ -138,7 +138,7 @@ public class GroupController {
             groupOfTask = groupService.findByAdminAndName(admin, groupOfTask.getName());
             task = groupTaskService.findByGroupAndName(groupOfTask, task.getName());
             task.completeTask(user);
-            groupTaskService.add(task);
+            groupTaskService.save(task);
             return ResponseEntity.ok("Выполнено");
         }
         catch (UserNotFoundException e) {
@@ -205,11 +205,15 @@ public class GroupController {
             UserEntity admin = userService.findByEmailAndPassword(adminAndGroupHolder.getAdmin().getEmail(), adminAndGroupHolder.getAdmin().getPassword());
             System.out.println(admin.getId());
             GroupEntity group = groupService.findByAdminAndName(admin, adminAndGroupHolder.getGroup().getName());
+            for (GroupTaskEntity task : group.getTasks()) {
+                task.getHasDone().clear();
+                groupTaskService.save(task);
+            }
             System.out.println(group.getId());
             groupService.deleteById(group.getId());
-        } catch (UserNotFoundException e) {
+        } catch (UserNotFoundException | GroupNotFoundException e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Данного пользователя не существует");
+            return ResponseEntity.badRequest().body("Данного пользователя или группы не существует");
         }
         return ResponseEntity.ok("Группа удалена");
     }

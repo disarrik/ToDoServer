@@ -15,7 +15,7 @@ public class GroupTaskService {
     @Autowired
     GroupRepository groupRepository;
 
-    public boolean add(GroupTaskEntity newTask) throws GroupNotFoundException {
+    public boolean save(GroupTaskEntity newTask) throws GroupNotFoundException {
         if(groupRepository.findById(newTask.getGroup().getId()) == null) {
             throw new GroupNotFoundException("Group not found");
         }
