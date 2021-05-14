@@ -53,7 +53,6 @@ public class GroupService {
             for (GroupTaskEntity task : group.getTasks()) {
                 for (UserEntity userHasDone : task.getHasDone()) {
                     if (userHasDone.getId() == member.getId()) {
-                        System.out.println("-----------------------");
                         task.getHasDone().remove(userHasDone);
                         userHasDone.getDoneTasks().remove(task);
                         try {
@@ -79,7 +78,6 @@ public class GroupService {
             }
         }
         member.getGroups().remove(groupToDelete);
-        this.deleteById(group.getId());
         this.save(group);
     }
 }
