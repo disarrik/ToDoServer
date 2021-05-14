@@ -89,9 +89,9 @@ public class GroupController {
             group = groupService.findByAdminAndName(admin, group.getName());
             newMember = userService.findByEmail(newMember.getEmail());
             if (admin != null && group != null && newMember != null) {
-                group.deleteMember(newMember);
-                groupService.deleteById(group.getId());
-                groupService.save(group);
+                groupService.deleteMember(newMember, group);
+                /*groupService.deleteById(group.getId());
+                groupService.save(group);*/
                 return ResponseEntity.ok("Пользователь удален");
             } else {
                 return ResponseEntity.badRequest().body("Пользователь не может быть удален!");

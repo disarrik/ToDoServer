@@ -1,5 +1,6 @@
 package com.example.restserver.entity;
 
+import com.example.restserver.model.GroupTask;
 import com.example.restserver.model.User;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -42,6 +43,14 @@ public class GroupEntity {
     public void deleteMember(UserEntity member) {
         UserEntity memberToDelete = null;
         for (UserEntity user: members) {
+            for (GroupTaskEntity task : tasks) {
+                for (UserEntity userHasDone : task.getHasDone()) {
+                    if (userHasDone == member) {
+                        task.getHasDone().remove(userHasDone);
+                        break;
+                    }
+                }
+            }
             if (member.getEmail().equals(user.getEmail())) {
                 memberToDelete = user;
             }
